@@ -108,7 +108,7 @@ class MyCircularQueue {
      */
     private int lengthUsed() {
         if (frontPointer < rearPointer) {
-            return frontPointer + rearPointer + 1;
+            return rearPointer + 1 - frontPointer;
         } else if (frontPointer > rearPointer) {
             return arrayOfInt.length - frontPointer + (rearPointer + 1);
         } else {
