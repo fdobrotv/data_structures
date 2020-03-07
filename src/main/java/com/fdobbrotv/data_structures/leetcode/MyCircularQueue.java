@@ -10,8 +10,7 @@ class MyCircularQueue {
      */
     public MyCircularQueue(int k) {
         arrayOfInt = new int[k];
-        frontPointer = -1;
-        rearPointer = -1;
+        frontPointer = rearPointer = -1;
     }
 
     /**
@@ -47,17 +46,23 @@ class MyCircularQueue {
     public boolean deQueue() {
         if (isEmpty()) return false;
 
-        if (frontPointer > -1 && frontPointer < arrayOfInt.length) {
-            frontPointer++;
+        if (frontPointer < rearPointer) {
+            if (frontPointer < arrayOfInt.length) {
+                frontPointer++;
+            } else {
+                frontPointer = 0;
+            }
             return true;
-        } else if (frontPointer == arrayOfInt.length - 1) {
-            frontPointer = 0;
-            return true;
-        } else if (frontPointer == rearPointer) {
-            frontPointer = -1;
+        } else if (frontPointer > rearPointer) {
+            if (frontPointer < arrayOfInt.length) {
+                frontPointer++;
+            } else {
+                frontPointer = 0;
+            }
             return true;
         } else {
-            return false;
+            frontPointer = rearPointer = -1;
+            return true;
         }
     }
 
@@ -69,7 +74,7 @@ class MyCircularQueue {
         if (!isEmpty()) {
             return arrayOfInt[frontPointer];
         } else {
-            throw new IllegalStateException();
+            return -1;
         }
     }
 
@@ -80,7 +85,7 @@ class MyCircularQueue {
         if (!isEmpty()) {
             return arrayOfInt[rearPointer];
         } else {
-            throw new IllegalStateException();
+            return -1;
         }
     }
 
@@ -102,12 +107,12 @@ class MyCircularQueue {
      * Get count of used indexes
      */
     private int lengthUsed() {
-        if (frontPointer == rearPointer) {
-            return 1;
-        } else if (frontPointer < rearPointer) {
-            return frontPointer + rearPointer + 1;
-        } else {
+        if (frontPointer < rearPointer) {
+            return rearPointer + 1 - frontPointer;
+        } else if (frontPointer > rearPointer) {
             return arrayOfInt.length - frontPointer + (rearPointer + 1);
+        } else {
+            return 1;
         }
     }
 }
