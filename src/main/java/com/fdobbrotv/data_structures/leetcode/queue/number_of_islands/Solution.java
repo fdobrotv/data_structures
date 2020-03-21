@@ -1,6 +1,8 @@
 package com.fdobbrotv.data_structures.leetcode.queue.number_of_islands;
 
-        import java.util.*;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 public class Solution {
     Set<Coordinate> visitedIslandCoordinates = new HashSet<>();  // store all the nodes that we've islands
