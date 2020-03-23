@@ -26,6 +26,6 @@ public class OpenTheLockTest {
         String[] deadends = new String[]{"0201", "0101", "0102", "1212", "2002"};
         String target = "0202";
         Solution solution = new Solution();
-        assertEquals(4, solution.openLock(deadends, target));
+        assertEquals(6, solution.openLock(deadends, target));
     }
 }
