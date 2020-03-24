@@ -75,7 +75,7 @@ public class Solution {
     }
 
     private Collection<Path> getPathsOfCode(String code) {
-        List<Path> paths = new ArrayList<>();
+        Set<Path> paths = new HashSet<>();
 
         byte[] targetBytes = toByteArray(code);
 
@@ -85,8 +85,8 @@ public class Solution {
         return paths;
     }
 
-    private List<Path> getBackwardPaths(byte[] targetBytes) {
-        List<Path> paths;
+    private Set<Path> getBackwardPaths(byte[] targetBytes) {
+        Set<Path> paths;
         Path path = new Path();
 
         byte backwardDistanceFirst = (byte) (10 - targetBytes[0]);
@@ -106,15 +106,15 @@ public class Solution {
 
         byte backwardDistanceFourth = (byte) (10 - targetBytes[3]);
         while (backwardDistanceFourth-- > 0) {
-            path.getSteps().add(FOURTH_FORWARD.getStep());
+            path.getSteps().add(FOURTH_BACKWARD.getStep());
         }
 
-        paths = Collections.singletonList(path);
+        paths = Collections.singleton(path);
         return paths;
     }
 
-    private List<Path> getForwardPaths(byte[] targetBytes) {
-        List<Path> paths;
+    private Set<Path> getForwardPaths(byte[] targetBytes) {
+        Set<Path> paths;
         Path path = new Path();
 
         byte forwardDistanceFirst = (byte) (state[0] + targetBytes[0]);
@@ -137,12 +137,12 @@ public class Solution {
             path.getSteps().add(FOURTH_FORWARD.getStep());
         }
 
-        paths = Collections.singletonList(path);
+        paths = Collections.singleton(path);
         return paths;
     }
 
-    private Collection<Path> getShortestPath(byte[] targetBytes) {
-        List<Path> paths;
+    private Set<Path> getShortestPath(byte[] targetBytes) {
+        Set<Path> paths;
 
         Path path = new Path();
 
@@ -154,7 +154,7 @@ public class Solution {
             }
         } else {
             while (backwardDistanceFirst-- > 0) {
-                path.getSteps().add(FIRST_FORWARD.getStep());
+                path.getSteps().add(FIRST_BACKWARD.getStep());
             }
         }
 
@@ -190,11 +190,11 @@ public class Solution {
             }
         } else {
             while (backwardDistanceFourth-- > 0) {
-                path.getSteps().add(Roll.FOURTH_BACKWARD.getStep());
+                path.getSteps().add(FOURTH_BACKWARD.getStep());
             }
         }
 
-        paths = Collections.singletonList(path);
+        paths = Collections.singleton(path);
         return paths;
     }
 
