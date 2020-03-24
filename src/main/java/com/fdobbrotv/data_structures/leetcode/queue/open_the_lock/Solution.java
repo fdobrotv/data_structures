@@ -3,6 +3,8 @@ package com.fdobbrotv.data_structures.leetcode.queue.open_the_lock;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.fdobbrotv.data_structures.leetcode.queue.open_the_lock.Roll.*;
+
 public class Solution {
     byte[] state;
 
@@ -12,9 +14,9 @@ public class Solution {
 
         byte result = -1;
 
-        boolean isDeadendsContainsTarget = Arrays.asList(deadends).contains(target);
+        boolean isDeadEndsContainsTarget = Arrays.asList(deadends).contains(target);
         boolean isDeadEndsContainsInitValue = Arrays.asList(deadends).contains("0000");
-        if (isDeadendsContainsTarget || isDeadEndsContainsInitValue) {
+        if (isDeadEndsContainsTarget || isDeadEndsContainsInitValue) {
             return result;
         }
 
@@ -41,7 +43,7 @@ public class Solution {
     private Byte getBestSolution(List<Path> filteredPaths) {
         return filteredPaths
                 .stream()
-                .map(it -> it.steps.size())
+                .map(it -> it.getSteps().size())
                 .min(Integer::compare)
                 .map(Integer::byteValue)
                 .orElseGet(() -> (byte) -1);
@@ -54,8 +56,8 @@ public class Solution {
     }
 
     private boolean isPathIncludes(Path left, Path right) {
-        List<Step> stepsOfTarget = left.steps;
-        List<Step> stepsOfDeadEnd = right.steps;
+        List<Step> stepsOfTarget = left.getSteps();
+        List<Step> stepsOfDeadEnd = right.getSteps();
         int size = Math.min(stepsOfTarget.size(), stepsOfDeadEnd.size());
         boolean result = false;
 
@@ -89,22 +91,22 @@ public class Solution {
 
         byte backwardDistanceFirst = (byte) (10 - targetBytes[0]);
         while (backwardDistanceFirst-- > 0) {
-            path.steps.add(Roll.FIRST_BACKWARD.getStep());
+            path.getSteps().add(FIRST_BACKWARD.getStep());
         }
 
         byte backwardDistanceSecond = (byte) (10 - targetBytes[1]);
         while (backwardDistanceSecond-- > 0) {
-            path.steps.add(Roll.SECOND_BACKWARD.getStep());
+            path.getSteps().add(SECOND_BACKWARD.getStep());
         }
 
         byte backwardDistanceThird = (byte) (10 - targetBytes[2]);
         while (backwardDistanceThird-- > 0) {
-            path.steps.add(Roll.THIRD_BACKWARD.getStep());
+            path.getSteps().add(THIRD_BACKWARD.getStep());
         }
 
         byte backwardDistanceFourth = (byte) (10 - targetBytes[3]);
         while (backwardDistanceFourth-- > 0) {
-            path.steps.add(Roll.FOURTH_FORWARD.getStep());
+            path.getSteps().add(FOURTH_FORWARD.getStep());
         }
 
         paths = Collections.singletonList(path);
@@ -117,22 +119,22 @@ public class Solution {
 
         byte forwardDistanceFirst = (byte) (state[0] + targetBytes[0]);
         while (forwardDistanceFirst-- > 0) {
-            path.steps.add(Roll.FIRST_FORWARD.getStep());
+            path.getSteps().add(FIRST_FORWARD.getStep());
         }
 
         byte forwardDistanceSecond = (byte) (state[1] + targetBytes[1]);
         while (forwardDistanceSecond-- > 0) {
-            path.steps.add(Roll.SECOND_FORWARD.getStep());
+            path.getSteps().add(SECOND_FORWARD.getStep());
         }
 
         byte forwardDistanceThird = (byte) (state[2] + targetBytes[2]);
         while (forwardDistanceThird-- > 0) {
-            path.steps.add(Roll.THIRD_FORWARD.getStep());
+            path.getSteps().add(THIRD_FORWARD.getStep());
         }
 
         byte forwardDistanceFourth = (byte) (state[3] + targetBytes[3]);
         while (forwardDistanceFourth-- > 0) {
-            path.steps.add(Roll.FOURTH_FORWARD.getStep());
+            path.getSteps().add(FOURTH_FORWARD.getStep());
         }
 
         paths = Collections.singletonList(path);
@@ -148,11 +150,11 @@ public class Solution {
         byte backwardDistanceFirst = (byte) (10 - targetBytes[0]);
         if (forwardDistanceFirst <= backwardDistanceFirst) {
             while (forwardDistanceFirst-- > 0) {
-                path.steps.add(Roll.FIRST_FORWARD.getStep());
+                path.getSteps().add(FIRST_FORWARD.getStep());
             }
         } else {
             while (backwardDistanceFirst-- > 0) {
-                path.steps.add(Roll.FIRST_FORWARD.getStep());
+                path.getSteps().add(FIRST_FORWARD.getStep());
             }
         }
 
@@ -160,11 +162,11 @@ public class Solution {
         byte backwardDistanceSecond = (byte) (10 - targetBytes[1]);
         if (forwardDistanceSecond <= backwardDistanceSecond) {
             while (forwardDistanceSecond-- > 0) {
-                path.steps.add(Roll.SECOND_FORWARD.getStep());
+                path.getSteps().add(SECOND_FORWARD.getStep());
             }
         } else {
             while (backwardDistanceSecond-- > 0) {
-                path.steps.add(Roll.SECOND_BACKWARD.getStep());
+                path.getSteps().add(SECOND_BACKWARD.getStep());
             }
         }
 
@@ -172,11 +174,11 @@ public class Solution {
         byte backwardDistanceThird = (byte) (10 - targetBytes[2]);
         if (forwardDistanceThird <= backwardDistanceThird) {
             while (forwardDistanceThird-- > 0) {
-                path.steps.add(Roll.THIRD_FORWARD.getStep());
+                path.getSteps().add(THIRD_FORWARD.getStep());
             }
         } else {
             while (backwardDistanceThird-- > 0) {
-                path.steps.add(Roll.THIRD_BACKWARD.getStep());
+                path.getSteps().add(THIRD_BACKWARD.getStep());
             }
         }
 
@@ -184,11 +186,11 @@ public class Solution {
         byte backwardDistanceFourth = (byte) (10 - targetBytes[3]);
         if (forwardDistanceFourth <= backwardDistanceFourth) {
             while (forwardDistanceFourth-- > 0) {
-                path.steps.add(Roll.FOURTH_FORWARD.getStep());
+                path.getSteps().add(FOURTH_FORWARD.getStep());
             }
         } else {
             while (backwardDistanceFourth-- > 0) {
-                path.steps.add(Roll.FOURTH_BACKWARD.getStep());
+                path.getSteps().add(Roll.FOURTH_BACKWARD.getStep());
             }
         }
 
@@ -209,27 +211,30 @@ public class Solution {
     private void resetLockState() {
         state = new byte[]{0, 0, 0, 0};
     }
+}
 
-    class Path {
-        private List<Step> steps = new ArrayList<>();
+class Path {
+    private List<Step> steps = new ArrayList<>();
 
-        Path() {
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            Path path = (Path) o;
-            return steps.equals(path.steps);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(steps);
-        }
+    Path() {
     }
 
+    public List<Step> getSteps() {
+        return steps;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Path path = (Path) o;
+        return steps.equals(path.steps);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(steps);
+    }
 }
 
 class Step {
@@ -250,24 +255,6 @@ class Step {
 
     public static Step of(int index, int value) {
         return new Step((byte) index, (byte) value);
-    }
-
-    public byte getIndex() {
-        return index;
-    }
-
-    //TODO: Allow only from 0 to 3
-    public void setIndex(byte index) {
-        this.index = index;
-    }
-
-    public byte getValue() {
-        return value;
-    }
-
-    //TODO: Allow only 1 and -1
-    public void setValue(byte value) {
-        this.value = value;
     }
 
     @Override
