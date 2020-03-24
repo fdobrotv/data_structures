@@ -31,9 +31,7 @@ public class Solution {
                 .filter(it -> !isPathComparableWithAnyOf(it, pathsOfDeadEnds))
                 .collect(Collectors.toList());
 
-        pathsOfDeadEnds.forEach(p -> {
-            isPathIncludes(pathsToTarget.get(0), p);
-        });
+        pathsOfDeadEnds.forEach(p -> isPathIncludes(pathsToTarget.get(0), p));
 
         result = getBestSolution(filteredPaths);
 
@@ -75,9 +73,116 @@ public class Solution {
     }
 
     private Collection<Path> getPathsOfCode(String code) {
-        List<Path> paths;
+        List<Path> paths = new ArrayList<>();
 
         byte[] targetBytes = toByteArray(code);
+
+        paths.addAll(getShortestPath(targetBytes));
+        paths.addAll(getBackwardPaths(targetBytes));
+        paths.addAll(getForwardPaths(targetBytes));
+        return paths;
+    }
+
+    private List<Path> getBackwardPaths(byte[] targetBytes) {
+        List<Path> paths;
+        Path path = new Path();
+
+        byte backwardDistanceFirst = (byte) (10 - targetBytes[0]);
+        while (backwardDistanceFirst-- > 0) {
+            rollFirstBackward(path);
+        }
+
+        byte backwardDistanceSecond = (byte) (10 - targetBytes[1]);
+        while (backwardDistanceSecond-- > 0) {
+            rollSecondBackward(path);
+        }
+
+        byte backwardDistanceThird = (byte) (10 - targetBytes[2]);
+        while (backwardDistanceThird-- > 0) {
+            rollThirdBackward(path);
+        }
+
+        byte backwardDistanceFourth = (byte) (10 - targetBytes[3]);
+        while (backwardDistanceFourth-- > 0) {
+            rollFourthBackward(path);
+        }
+
+        paths = Collections.singletonList(path);
+        return paths;
+    }
+
+    private void rollFourthBackward(Path path) {
+        Step step = new Step();
+        step.index = 3;
+        step.value = -1;
+        path.steps.add(step);
+    }
+
+    private void rollThirdBackward(Path path) {
+        Step step = new Step();
+        step.index = 2;
+        step.value = -1;
+        path.steps.add(step);
+    }
+
+    private void rollSecondBackward(Path path) {
+        Step step = new Step();
+        step.index = 1;
+        step.value = -1;
+        path.steps.add(step);
+    }
+
+    private void rollFirstBackward(Path path) {
+        Step step = new Step();
+        step.index = 0;
+        step.value = -1;
+        path.steps.add(step);
+    }
+
+    private List<Path> getForwardPaths(byte[] targetBytes) {
+        List<Path> paths;
+        Path path = new Path();
+
+        byte forwardDistanceFirst = (byte) (state[0] + targetBytes[0]);
+        while (forwardDistanceFirst-- > 0) {
+            rollFirstForward(path);
+        }
+
+        byte forwardDistanceSecond = (byte) (state[1] + targetBytes[1]);
+        while (forwardDistanceSecond-- > 0) {
+            rollSecondForward(path);
+        }
+
+        byte forwardDistanceThird = (byte) (state[2] + targetBytes[2]);
+        while (forwardDistanceThird-- > 0) {
+            rollThirdForward(path);
+        }
+
+        byte forwardDistanceFourth = (byte) (state[3] + targetBytes[3]);
+        while (forwardDistanceFourth-- > 0) {
+            rollFourthForward(path);
+        }
+
+        paths = Collections.singletonList(path);
+        return paths;
+    }
+
+    private void rollThirdForward(Path path) {
+        Step step = new Step();
+        step.index = 2;
+        step.value = 1;
+        path.steps.add(step);
+    }
+
+    private void rollFirstForward(Path path) {
+        Step step = new Step();
+        step.index = 0;
+        step.value = 1;
+        path.steps.add(step);
+    }
+
+    private Collection<Path> getShortestPath(byte[] targetBytes) {
+        List<Path> paths;
 
         Path path = new Path();
 
@@ -85,17 +190,11 @@ public class Solution {
         byte backwardDistanceFirst = (byte) (10 - targetBytes[0]);
         if (forwardDistanceFirst <= backwardDistanceFirst) {
             while (forwardDistanceFirst-- > 0) {
-                Step step = new Step();
-                step.index = 0;
-                step.value = 1;
-                path.steps.add(step);
+                rollFirstForward(path);
             }
         } else {
             while (backwardDistanceFirst-- > 0) {
-                Step step = new Step();
-                step.index = 0;
-                step.value = -1;
-                path.steps.add(step);
+                rollFirstBackward(path);
             }
         }
 
@@ -103,17 +202,11 @@ public class Solution {
         byte backwardDistanceSecond = (byte) (10 - targetBytes[1]);
         if (forwardDistanceSecond <= backwardDistanceSecond) {
             while (forwardDistanceSecond-- > 0) {
-                Step step = new Step();
-                step.index = 1;
-                step.value = 1;
-                path.steps.add(step);
+                rollSecondForward(path);
             }
         } else {
             while (backwardDistanceSecond-- > 0) {
-                Step step = new Step();
-                step.index = 1;
-                step.value = -1;
-                path.steps.add(step);
+                rollSecondBackward(path);
             }
         }
 
@@ -121,17 +214,11 @@ public class Solution {
         byte backwardDistanceThird = (byte) (10 - targetBytes[2]);
         if (forwardDistanceThird <= backwardDistanceThird) {
             while (forwardDistanceThird-- > 0) {
-                Step step = new Step();
-                step.index = 2;
-                step.value = 1;
-                path.steps.add(step);
+                rollThirdForward(path);
             }
         } else {
             while (backwardDistanceThird-- > 0) {
-                Step step = new Step();
-                step.index = 2;
-                step.value = -1;
-                path.steps.add(step);
+                rollThirdBackward(path);
             }
         }
 
@@ -139,17 +226,11 @@ public class Solution {
         byte backwardDistanceFourth = (byte) (10 - targetBytes[3]);
         if (forwardDistanceFourth <= backwardDistanceFourth) {
             while (forwardDistanceFourth-- > 0) {
-                Step step = new Step();
-                step.index = 3;
-                step.value = 1;
-                path.steps.add(step);
+                rollFourthForward(path);
             }
         } else {
             while (backwardDistanceFourth-- > 0) {
-                Step step = new Step();
-                step.index = 3;
-                step.value = -1;
-                path.steps.add(step);
+                rollFourthBackward(path);
             }
         }
 
@@ -157,67 +238,18 @@ public class Solution {
         return paths;
     }
 
-    private byte simpleWayStepsCounter(byte[] targetBytes) {
-        byte result = 0;
+    private void rollFourthForward(Path path) {
+        Step step = new Step();
+        step.index = 3;
+        step.value = 1;
+        path.steps.add(step);
+    }
 
-        byte forwardDistanceFirst = (byte) (state[0] + targetBytes[0]);
-        byte forwardDistanceSecond = (byte) (state[1] + targetBytes[1]);
-        byte forwardDistanceThird = (byte) (state[2] + targetBytes[2]);
-        byte forwardDistanceFourth = (byte) (state[3] + targetBytes[3]);
-
-        byte backwardDistanceFirst = (byte) (10 - targetBytes[0]);
-        byte backwardDistanceSecond = (byte) (10 - targetBytes[1]);
-        byte backwardDistanceThird = (byte) (10 - targetBytes[2]);
-        byte backwardDistanceFourth = (byte) (10 - targetBytes[3]);
-
-        if (forwardDistanceFirst <= backwardDistanceFirst) {
-            while (forwardDistanceFirst-- > 0) {
-                state[0] = ++state[0];
-                ++result;
-            }
-        } else {
-            while (backwardDistanceFirst-- > 0) {
-                state[0] = --state[0];
-                ++result;
-            }
-        }
-
-        if (forwardDistanceSecond <= backwardDistanceSecond) {
-            while (forwardDistanceSecond-- > 0) {
-                state[1] = ++state[1];
-                ++result;
-            }
-        } else {
-            while (backwardDistanceSecond-- > 0) {
-                state[1] = --state[1];
-                ++result;
-            }
-        }
-
-        if (forwardDistanceThird <= backwardDistanceThird) {
-            while (forwardDistanceThird-- > 0) {
-                state[2] = ++state[2];
-                ++result;
-            }
-        } else {
-            while (backwardDistanceThird-- > 0) {
-                state[2] = --state[2];
-                ++result;
-            }
-        }
-
-        if (forwardDistanceFourth <= backwardDistanceFourth) {
-            while (forwardDistanceFourth-- > 0) {
-                state[3] = ++state[3];
-                ++result;
-            }
-        } else {
-            while (backwardDistanceFourth-- > 0) {
-                state[3] = --state[3];
-                ++result;
-            }
-        }
-        return result;
+    private void rollSecondForward(Path path) {
+        Step step = new Step();
+        step.index = 1;
+        step.value = 1;
+        path.steps.add(step);
     }
 
     private byte[] toByteArray(String target) {
@@ -238,14 +270,6 @@ public class Solution {
         private List<Step> steps = new ArrayList<>();
 
         Path() {
-        }
-
-        public List<Step> getSteps() {
-            return steps;
-        }
-
-        public void setSteps(List<Step> steps) {
-            this.steps = steps;
         }
 
         @Override
