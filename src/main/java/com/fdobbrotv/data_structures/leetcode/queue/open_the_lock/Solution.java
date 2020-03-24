@@ -89,22 +89,22 @@ public class Solution {
 
         byte backwardDistanceFirst = (byte) (10 - targetBytes[0]);
         while (backwardDistanceFirst-- > 0) {
-            rollFirstBackward(path);
+            path.steps.add(Roll.FIRST_BACKWARD.getStep());
         }
 
         byte backwardDistanceSecond = (byte) (10 - targetBytes[1]);
         while (backwardDistanceSecond-- > 0) {
-            rollSecondBackward(path);
+            path.steps.add(Roll.SECOND_BACKWARD.getStep());
         }
 
         byte backwardDistanceThird = (byte) (10 - targetBytes[2]);
         while (backwardDistanceThird-- > 0) {
-            rollThirdBackward(path);
+            path.steps.add(Roll.THIRD_BACKWARD.getStep());
         }
 
         byte backwardDistanceFourth = (byte) (10 - targetBytes[3]);
         while (backwardDistanceFourth-- > 0) {
-            rollFourthBackward(path);
+            path.steps.add(Roll.FOURTH_FORWARD.getStep());
         }
 
         paths = Collections.singletonList(path);
@@ -117,22 +117,22 @@ public class Solution {
 
         byte forwardDistanceFirst = (byte) (state[0] + targetBytes[0]);
         while (forwardDistanceFirst-- > 0) {
-            rollFirstForward(path);
+            path.steps.add(Roll.FIRST_FORWARD.getStep());
         }
 
         byte forwardDistanceSecond = (byte) (state[1] + targetBytes[1]);
         while (forwardDistanceSecond-- > 0) {
-            rollSecondForward(path);
+            path.steps.add(Roll.SECOND_FORWARD.getStep());
         }
 
         byte forwardDistanceThird = (byte) (state[2] + targetBytes[2]);
         while (forwardDistanceThird-- > 0) {
-            rollThirdForward(path);
+            path.steps.add(Roll.THIRD_FORWARD.getStep());
         }
 
         byte forwardDistanceFourth = (byte) (state[3] + targetBytes[3]);
         while (forwardDistanceFourth-- > 0) {
-            rollFourthForward(path);
+            path.steps.add(Roll.FOURTH_FORWARD.getStep());
         }
 
         paths = Collections.singletonList(path);
@@ -148,11 +148,11 @@ public class Solution {
         byte backwardDistanceFirst = (byte) (10 - targetBytes[0]);
         if (forwardDistanceFirst <= backwardDistanceFirst) {
             while (forwardDistanceFirst-- > 0) {
-                rollFirstForward(path);
+                path.steps.add(Roll.FIRST_FORWARD.getStep());
             }
         } else {
             while (backwardDistanceFirst-- > 0) {
-                rollFirstBackward(path);
+                path.steps.add(Roll.FIRST_FORWARD.getStep());
             }
         }
 
@@ -160,11 +160,11 @@ public class Solution {
         byte backwardDistanceSecond = (byte) (10 - targetBytes[1]);
         if (forwardDistanceSecond <= backwardDistanceSecond) {
             while (forwardDistanceSecond-- > 0) {
-                rollSecondForward(path);
+                path.steps.add(Roll.SECOND_FORWARD.getStep());
             }
         } else {
             while (backwardDistanceSecond-- > 0) {
-                rollSecondBackward(path);
+                path.steps.add(Roll.SECOND_BACKWARD.getStep());
             }
         }
 
@@ -172,11 +172,11 @@ public class Solution {
         byte backwardDistanceThird = (byte) (10 - targetBytes[2]);
         if (forwardDistanceThird <= backwardDistanceThird) {
             while (forwardDistanceThird-- > 0) {
-                rollThirdForward(path);
+                path.steps.add(Roll.THIRD_FORWARD.getStep());
             }
         } else {
             while (backwardDistanceThird-- > 0) {
-                rollThirdBackward(path);
+                path.steps.add(Roll.THIRD_BACKWARD.getStep());
             }
         }
 
@@ -184,56 +184,16 @@ public class Solution {
         byte backwardDistanceFourth = (byte) (10 - targetBytes[3]);
         if (forwardDistanceFourth <= backwardDistanceFourth) {
             while (forwardDistanceFourth-- > 0) {
-                rollFourthForward(path);
+                path.steps.add(Roll.FOURTH_FORWARD.getStep());
             }
         } else {
             while (backwardDistanceFourth-- > 0) {
-                rollFourthBackward(path);
+                path.steps.add(Roll.FOURTH_BACKWARD.getStep());
             }
         }
 
         paths = Collections.singletonList(path);
         return paths;
-    }
-
-    private void rollFourthBackward(Path path) {
-        Step step = Step.of(3, -1);
-        path.steps.add(step);
-    }
-
-    private void rollThirdBackward(Path path) {
-        Step step = Step.of(2, -1);
-        path.steps.add(step);
-    }
-
-    private void rollSecondBackward(Path path) {
-        Step step = Step.of(1, -1);
-        path.steps.add(step);
-    }
-
-    private void rollFirstBackward(Path path) {
-        Step step = Step.of(0, -1);
-        path.steps.add(step);
-    }
-
-    private void rollThirdForward(Path path) {
-        Step step = Step.of(2, 1);
-        path.steps.add(step);
-    }
-
-    private void rollFirstForward(Path path) {
-        Step step = Step.of(0, 1);
-        path.steps.add(step);
-    }
-
-    private void rollFourthForward(Path path) {
-        Step step = Step.of(3, 1);
-        path.steps.add(step);
-    }
-
-    private void rollSecondForward(Path path) {
-        Step step = Step.of(1, 1);
-        path.steps.add(step);
     }
 
     private byte[] toByteArray(String target) {
@@ -332,12 +292,16 @@ enum Roll {
     SECOND_BACKWARD(Step.of(1, -1)),
     THIRD_FORWARD(Step.of(2, 1)),
     THIRD_BACKWARD(Step.of(2, -1)),
-    FORTH_FORWARD(Step.of(3, 1)),
-    FORTH_BACKWARD(Step.of(3, -1));
+    FOURTH_FORWARD(Step.of(3, 1)),
+    FOURTH_BACKWARD(Step.of(3, -1));
 
     private Step step;
 
     Roll(Step step) {
         this.step = step;
+    }
+
+    public Step getStep() {
+        return this.step;
     }
 }
