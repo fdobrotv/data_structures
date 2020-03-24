@@ -111,34 +111,6 @@ public class Solution {
         return paths;
     }
 
-    private void rollFourthBackward(Path path) {
-        Step step = new Step();
-        step.index = 3;
-        step.value = -1;
-        path.steps.add(step);
-    }
-
-    private void rollThirdBackward(Path path) {
-        Step step = new Step();
-        step.index = 2;
-        step.value = -1;
-        path.steps.add(step);
-    }
-
-    private void rollSecondBackward(Path path) {
-        Step step = new Step();
-        step.index = 1;
-        step.value = -1;
-        path.steps.add(step);
-    }
-
-    private void rollFirstBackward(Path path) {
-        Step step = new Step();
-        step.index = 0;
-        step.value = -1;
-        path.steps.add(step);
-    }
-
     private List<Path> getForwardPaths(byte[] targetBytes) {
         List<Path> paths;
         Path path = new Path();
@@ -165,20 +137,6 @@ public class Solution {
 
         paths = Collections.singletonList(path);
         return paths;
-    }
-
-    private void rollThirdForward(Path path) {
-        Step step = new Step();
-        step.index = 2;
-        step.value = 1;
-        path.steps.add(step);
-    }
-
-    private void rollFirstForward(Path path) {
-        Step step = new Step();
-        step.index = 0;
-        step.value = 1;
-        path.steps.add(step);
     }
 
     private Collection<Path> getShortestPath(byte[] targetBytes) {
@@ -238,17 +196,43 @@ public class Solution {
         return paths;
     }
 
+    private void rollFourthBackward(Path path) {
+        Step step = Step.of(3, -1);
+        path.steps.add(step);
+    }
+
+    private void rollThirdBackward(Path path) {
+        Step step = Step.of(2, -1);
+        path.steps.add(step);
+    }
+
+    private void rollSecondBackward(Path path) {
+        Step step = Step.of(1, -1);
+        path.steps.add(step);
+    }
+
+    private void rollFirstBackward(Path path) {
+        Step step = Step.of(0, -1);
+        path.steps.add(step);
+    }
+
+    private void rollThirdForward(Path path) {
+        Step step = Step.of(2, 1);
+        path.steps.add(step);
+    }
+
+    private void rollFirstForward(Path path) {
+        Step step = Step.of(0, 1);
+        path.steps.add(step);
+    }
+
     private void rollFourthForward(Path path) {
-        Step step = new Step();
-        step.index = 3;
-        step.value = 1;
+        Step step = Step.of(3, 1);
         path.steps.add(step);
     }
 
     private void rollSecondForward(Path path) {
-        Step step = new Step();
-        step.index = 1;
-        step.value = 1;
+        Step step = Step.of(1, 1);
         path.steps.add(step);
     }
 
@@ -286,52 +270,74 @@ public class Solution {
         }
     }
 
-    class Step {
-        // 0 to 3
-        private byte index;
-        // 1 or -1
-        private byte value;
+}
 
-        private Step() {
-        }
+class Step {
+    // 0 to 3
+    private byte index;
+    // 1 or -1
+    private byte value;
 
-        public Step(byte index, byte value) {
-            //TODO: Allow only from 0 to 3
-            this.index = index;
-            //TODO: Allow only 1 and -1
-            this.value = value;
-        }
+    private Step() {
+    }
 
-        public byte getIndex() {
-            return index;
-        }
-
+    public Step(byte index, byte value) {
         //TODO: Allow only from 0 to 3
-        public void setIndex(byte index) {
-            this.index = index;
-        }
-
-        public byte getValue() {
-            return value;
-        }
-
+        this.index = index;
         //TODO: Allow only 1 and -1
-        public void setValue(byte value) {
-            this.value = value;
-        }
+        this.value = value;
+    }
 
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            Step step = (Step) o;
-            return index == step.index &&
-                    value == step.value;
-        }
+    public static Step of(int index, int value) {
+        return new Step((byte) index, (byte) value);
+    }
 
-        @Override
-        public int hashCode() {
-            return Objects.hash(index, value);
-        }
+    public byte getIndex() {
+        return index;
+    }
+
+    //TODO: Allow only from 0 to 3
+    public void setIndex(byte index) {
+        this.index = index;
+    }
+
+    public byte getValue() {
+        return value;
+    }
+
+    //TODO: Allow only 1 and -1
+    public void setValue(byte value) {
+        this.value = value;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Step step = (Step) o;
+        return index == step.index &&
+                value == step.value;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(index, value);
+    }
+}
+
+enum Roll {
+    FIRST_FORWARD(Step.of(0, 1)),
+    FIRST_BACKWARD(Step.of(0, -1)),
+    SECOND_FORWARD(Step.of(1, 1)),
+    SECOND_BACKWARD(Step.of(1, -1)),
+    THIRD_FORWARD(Step.of(2, 1)),
+    THIRD_BACKWARD(Step.of(2, -1)),
+    FORTH_FORWARD(Step.of(3, 1)),
+    FORTH_BACKWARD(Step.of(3, -1));
+
+    private Step step;
+
+    Roll(Step step) {
+        this.step = step;
     }
 }
